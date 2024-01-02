@@ -1,3 +1,2 @@
- - Add the exercise of two networks with same application
  - Change the Workflow section in the "ReadMeFirst" document once all the other modules are defined
  - List of planned modules: networking, storage, managing pods, transitioning to k8s, creating a systemd unit
