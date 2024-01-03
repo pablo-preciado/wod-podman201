@@ -1,2 +1,3 @@
  - Change the Workflow section in the "ReadMeFirst" document once all the other modules are defined
  - List of planned modules: networking, storage, managing pods, transitioning to k8s, creating a systemd unit
+ - Add at least a video to Podman Desktop because it's super useful
