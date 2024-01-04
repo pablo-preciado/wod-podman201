@@ -150,6 +150,7 @@ Image=quay.io/skupper/patient-portal-frontend
 ContainerName=frontend
 Network=payment.network
 Network=database.network
+PublishPort=8080:8080
 Environment=DATABASE_SERVICE_HOST="database"
 Environment=DATABASE_SERVICE_PORT="5432"
 Environment=PAYMENT_PROCESSOR_SERVICE_HOST="payment-processor"
