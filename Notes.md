@@ -169,3 +169,58 @@ systemctl --user status payment-processor.service --no-pager
 
 systemctl --user start frontend.service
 systemctl --user status frontend.service  --no-pager
+
+# Notes
+
+~~~
+SECTION DEPLOYING THE WORKLOAD TO KUBERNETES, TO BE WRITTEN ONCE THE OPENSHIFT CLUSTER IS UP AND RUNNING
+~~~
+
+__________
+
+oc new-app --name database --image quay.io/skupper/patient-portal-database -e PGDATA=/var/lib/postgresql/data/patient-portal
+
+oc create deployment database --port 5432 --image quay.io/skupper/patient-portal-database
+oc set env deployment/database PGDATA=/var/lib/postgresql/data/patient-portal
+oc rollout restart deployment/database
+
+podman run -d --rm --name database --network database quay.io/skupper/patient-portal-database
+
+__________
+
+oc new-app --name payment-processor --image quay.io/skupper/patient-portal-payment-processor
+
+oc create deploy payment-processor --port 8080 --image quay.io/skupper/patient-portal-payment-processor
+
+podman run -d --rm --name payment-processor --network payment quay.io/skupper/patient-portal-payment-processor
+
+__________
+
+oc new-app --name frontend \
+-e DATABASE_SERVICE_HOST="database" \
+-e DATABASE_SERVICE_PORT="5432" \
+-e PAYMENT_PROCESSOR_SERVICE_HOST="payment-processor" \
+-e PAYMENT_PROCESSOR_SERVICE_PORT="8080" \
+--image quay.io/skupper/patient-portal-frontend
+
+oc create deployment frontend --image quay.io/skupper/patient-portal-frontend
+oc set env deployment/frontend \
+DATABASE_SERVICE_HOST="database" \
+DATABASE_SERVICE_PORT="5432" \
+PAYMENT_PROCESSOR_SERVICE_HOST="payment-processor" \
+PAYMENT_PROCESSOR_SERVICE_PORT="8080"
+oc rollout restart deployment/frontend
+
+podman run -d --rm --name frontend --network payment,database -p 8080:8080 \
+-e DATABASE_SERVICE_HOST="database" \
+-e DATABASE_SERVICE_PORT="5432" \
+-e PAYMENT_PROCESSOR_SERVICE_HOST="payment-processor" \
+-e PAYMENT_PROCESSOR_SERVICE_PORT="8080" \
+quay.io/skupper/patient-portal-frontend
+
+______________________________________________
+______________________________________________
+
+oc expose deployment/database --port 5432
+oc expose deployment/payment-processor --port 8080
+oc expose deployment/frontend --port 8080
