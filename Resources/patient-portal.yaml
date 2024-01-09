@@ -1,3 +1,4 @@
+# Deploy using the command "oc apply -f https://raw.githubusercontent.com/pablo-preciado/wod-podman201/master/Resources/patient-portal.yaml"
 ---
 apiVersion: project.openshift.io/v1
 kind: Project
