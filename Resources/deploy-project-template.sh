@@ -1,6 +1,5 @@
 #!/bin/bash
 oc create -f template.yaml -n openshift-config
-# oc edit project.config.openshift.io/cluster
 cat << EOF |oc replace -f -
 apiVersion: config.openshift.io/v1
 kind: Project

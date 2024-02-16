@@ -1,8 +1,8 @@
 # https://access.redhat.com/documentation/en-us/openshift_container_platform/4.14/html/building_applications/quotas
+# oc apply -f ClusterResourceQuota.yml
 apiVersion: quota.openshift.io/v1
 kind: ClusterResourceQuota
 metadata:
-  creationTimestamp: null
   name: podman201
 spec:
   quota:
@@ -23,5 +23,3 @@ spec:
     labels:
       matchLabels:
         workshop: podman201
-
-# Take a look at this https://stackoverflow.com/questions/55002334/kubernetes-node-selector-regex
